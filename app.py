@@ -770,12 +770,15 @@ stop_event = threading.Event()
 
 
 def default_screenshot_folder():
+    project_dir = Path(__file__).resolve().parent
+    screenshots_dir = project_dir / "Screenshots"
+    screenshots_dir.mkdir(exist_ok=True)
     if sys.platform.startswith("win"):
         guess = Path(r"C:\Users\ralme\OneDrive\Pictures\Screenshots 1")
-        return str(guess) if guess.exists() else str(Path.home() / "Pictures")
+        return str(guess) if guess.exists() else str(screenshots_dir)
     elif sys.platform == "darwin":
-        return str(Path.home() / "Desktop")
-    return str(Path.home())
+        return str(screenshots_dir)
+    return str(screenshots_dir)
 
 
 def sanitize(name):
