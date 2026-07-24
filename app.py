@@ -241,14 +241,50 @@ HTML_PAGE = r"""<!DOCTYPE html>
         <div style="display:flex;gap:6px">
           <select id="subjectSelect" onchange="onSubjectChange()">
             <option value="">-- Pick a subject --</option>
-            <option value="BiologyU1">Biology U1</option>
-            <option value="BiologyU2">Biology U2</option>
-            <option value="ChemistryU1">Chemistry U1</option>
-            <option value="ChemistryU2">Chemistry U2</option>
-            <option value="PhysicsU1">Physics U1</option>
-            <option value="PhysicsU2">Physics U2</option>
-            <option value="AppliedMathematicsU1">Applied Mathematics U1</option>
-            <option value="AppliedMathematicsU2">Applied Mathematics U2</option>
+            <option value="AccountingU1P1">Accounting U1 P1</option>
+            <option value="AccountingU1P2">Accounting U1 P2</option>
+            <option value="AccountingU2P1">Accounting U2 P1</option>
+            <option value="AccountingU2P2">Accounting U2 P2</option>
+            <option value="AppliedMathematicsU1P1">Applied Mathematics U1 P1</option>
+            <option value="AppliedMathematicsU1P2">Applied Mathematics U1 P2</option>
+            <option value="AppliedMathematicsU2P1">Applied Mathematics U2 P1</option>
+            <option value="AppliedMathematicsU2P2">Applied Mathematics U2 P2</option>
+            <option value="ComputerScienceU1P1">Computer Science U1 P1</option>
+            <option value="ComputerScienceU1P2">Computer Science U1 P2</option>
+            <option value="ComputerScienceU2P1">Computer Science U2 P1</option>
+            <option value="ComputerScienceU2P2">Computer Science U2 P2</option>
+            <option value="EconomicsU1P1">Economics U1 P1</option>
+            <option value="EconomicsU1P2">Economics U1 P2</option>
+            <option value="EconomicsU2P1">Economics U2 P1</option>
+            <option value="EconomicsU2P2">Economics U2 P2</option>
+            <option value="EntrepreneurshipU1P1">Entrepreneurship U1 P1</option>
+            <option value="EntrepreneurshipU1P2">Entrepreneurship U1 P2</option>
+            <option value="EntrepreneurshipU2P1">Entrepreneurship U2 P1</option>
+            <option value="EntrepreneurshipU2P2">Entrepreneurship U2 P2</option>
+            <option value="InformationTechnologyU1P1">Information Technology (I.T) U1 P1</option>
+            <option value="InformationTechnologyU1P2">Information Technology (I.T) U1 P2</option>
+            <option value="InformationTechnologyU2P1">Information Technology (I.T) U2 P1</option>
+            <option value="InformationTechnologyU2P2">Information Technology (I.T) U2 P2</option>
+            <option value="PhysicsU1P1">Physics U1 P1</option>
+            <option value="PhysicsU1P2">Physics U1 P2</option>
+            <option value="PhysicsU2P1">Physics U2 P1</option>
+            <option value="PhysicsU2P2">Physics U2 P2</option>
+            <option value="LiteratureU1P1">Literature U1 P1</option>
+            <option value="LiteratureU1P2">Literature U1 P2</option>
+            <option value="LiteratureU2P1">Literature U2 P1</option>
+            <option value="LiteratureU2P2">Literature U2 P2</option>
+            <option value="ManagementOfBusinessU1P1">Management of Business (MOB) U1 P1</option>
+            <option value="ManagementOfBusinessU1P2">Management of Business (MOB) U1 P2</option>
+            <option value="ManagementOfBusinessU2P1">Management of Business (MOB) U2 P1</option>
+            <option value="ManagementOfBusinessU2P2">Management of Business (MOB) U2 P2</option>
+            <option value="SociologyU1P1">Sociology U1 P1</option>
+            <option value="SociologyU1P2">Sociology U1 P2</option>
+            <option value="SociologyU2P1">Sociology U2 P1</option>
+            <option value="SociologyU2P2">Sociology U2 P2</option>
+            <option value="TourismU1P1">Tourism U1 P1</option>
+            <option value="TourismU1P2">Tourism U1 P2</option>
+            <option value="TourismU2P1">Tourism U2 P1</option>
+            <option value="TourismU2P2">Tourism U2 P2</option>
             <option value="__custom__">Custom...</option>
           </select>
           <input type="text" id="subject" placeholder="Type subject" style="display:none;flex:1">
@@ -755,6 +791,26 @@ HTML_PAGE = r"""<!DOCTYPE html>
   document.getElementById('namesBox').addEventListener('input', renderGrid);
   document.getElementById('subject').addEventListener('keydown', function(e) { if (e.key === 'Enter') createFolder(); });
   document.getElementById('subjectSelect').addEventListener('keydown', function(e) { if (e.key === 'Enter') createFolder(); });
+
+  (async function() {
+    try {
+      const res = await fetch('/api/status');
+      const data = await res.json();
+      if (data.watching) {
+        isWatching = true;
+        var btn = document.getElementById('watchBtn');
+        var badge = document.getElementById('watchBadge');
+        var status = document.getElementById('watchStatus');
+        btn.className = 'btn btn-red';
+        btn.textContent = 'Stop Auto-Move';
+        badge.className = 'badge badge-on';
+        badge.textContent = 'ON';
+        status.className = 'watch-status ok';
+        status.textContent = 'Watching (reconnected)';
+        startPolling();
+      }
+    } catch(e) {}
+  })();
 </script>
 </body>
 </html>"""

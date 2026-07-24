@@ -62,8 +62,8 @@ def default_screenshot_folder() -> Path:
 
 def sanitize(name: str) -> str:
     name = name.strip()
-    name = re.sub(r"[^\w\s\-]", "", name)   # strip punctuation
-    name = re.sub(r"\s+", "_", name)        # spaces -> underscores
+    name = re.sub(r"[^\w\s\-]", "", name)  # strip punctuation
+    name = re.sub(r"\s+", "_", name)  # spaces -> underscores
     return name or "untitled"
 
 
@@ -88,8 +88,9 @@ class App(tk.Tk):
         self.watching = False
         self.pending = {}  # path -> last seen size, waiting to confirm write finished
 
-        tk.Label(self, text="Step 1: Start a session folder",
-                 font=("Segoe UI", 12, "bold")).pack(pady=(15, 5))
+        tk.Label(
+            self, text="Step 1: Start a session folder", font=("Segoe UI", 12, "bold")
+        ).pack(pady=(15, 5))
 
         frame = tk.Frame(self)
         frame.pack(pady=5)
@@ -100,30 +101,81 @@ class App(tk.Tk):
 
         tk.Label(frame, text="Subject:").grid(row=0, column=2, padx=5)
         SUBJECTS = [
-            "Biology U1", "Biology U2",
-            "Chemistry U1", "Chemistry U2",
-            "Physics U1", "Physics U2",
-            "Applied Mathematics U1", "Applied Mathematics U2",
+            "Accounting U1 P1",
+            "Accounting U1 P2",
+            "Accounting U2 P1",
+            "Accounting U2 P2",
+            "Applied Mathematics U1 P1",
+            "Applied Mathematics U1 P2",
+            "Applied Mathematics U2 P1",
+            "Applied Mathematics U2 P2",
+            "Computer Science U1 P1",
+            "Computer Science U1 P2",
+            "Computer Science U2 P1",
+            "Computer Science U2 P2",
+            "Economics U1 P1",
+            "Economics U1 P2",
+            "Economics U2 P1",
+            "Economics U2 P2",
+            "Entrepreneurship U1 P1",
+            "Entrepreneurship U1 P2",
+            "Entrepreneurship U2 P1",
+            "Entrepreneurship U2 P2",
+            "Information Technology (I.T) U1 P1",
+            "Information Technology (I.T) U1 P2",
+            "Information Technology (I.T) U2 P1",
+            "Information Technology (I.T) U2 P2",
+            "Physics U1 P1",
+            "Physics U1 P2",
+            "Physics U2 P1",
+            "Physics U2 P2",
+            "Literature U1 P1",
+            "Literature U1 P2",
+            "Literature U2 P1",
+            "Literature U2 P2",
+            "Management of Business (MOB) U1 P1",
+            "Management of Business (MOB) U1 P2",
+            "Management of Business (MOB) U2 P1",
+            "Management of Business (MOB) U2 P2",
+            "Sociology U1 P1",
+            "Sociology U1 P2",
+            "Sociology U2 P1",
+            "Sociology U2 P2",
+            "Tourism U1 P1",
+            "Tourism U1 P2",
+            "Tourism U2 P1",
+            "Tourism U2 P2",
             "Custom...",
         ]
         self.subject_var = tk.StringVar(value=SUBJECTS[0])
-        self.subject_menu = tk.OptionMenu(frame, self.subject_var, *SUBJECTS, command=self._on_subject_change)
+        self.subject_menu = tk.OptionMenu(
+            frame, self.subject_var, *SUBJECTS, command=self._on_subject_change
+        )
         self.subject_menu.grid(row=0, column=3, padx=5)
         self.subject_custom = tk.Entry(frame, width=20)
         self.subject_custom.grid(row=1, column=2, columnspan=2, padx=5, pady=(4, 0))
         self.subject_custom.grid_remove()  # hidden until "Custom..." is selected
 
-        tk.Button(self, text="Create New Folder", command=self.create_folder).pack(pady=8)
+        tk.Button(self, text="Create New Folder", command=self.create_folder).pack(
+            pady=8
+        )
 
-        self.folder_label = tk.Label(self, text="No folder created yet.", fg="gray", wraplength=560)
+        self.folder_label = tk.Label(
+            self, text="No folder created yet.", fg="gray", wraplength=560
+        )
         self.folder_label.pack(pady=(0, 15))
 
-        tk.Label(self, text="Step 2: Auto-move screenshots into that folder",
-                 font=("Segoe UI", 12, "bold")).pack(pady=(5, 5))
+        tk.Label(
+            self,
+            text="Step 2: Auto-move screenshots into that folder",
+            font=("Segoe UI", 12, "bold"),
+        ).pack(pady=(5, 5))
 
         src_frame = tk.Frame(self)
         src_frame.pack(pady=5)
-        tk.Label(src_frame, text="Source folder (where your capture tool saves images):").pack(anchor="w")
+        tk.Label(
+            src_frame, text="Source folder (where your capture tool saves images):"
+        ).pack(anchor="w")
         src_row = tk.Frame(src_frame)
         src_row.pack(fill="x")
         self.source_entry = tk.Entry(src_row, width=55)
@@ -131,8 +183,13 @@ class App(tk.Tk):
         self.source_entry.pack(side="left", padx=(0, 5))
         tk.Button(src_row, text="Browse", command=self.browse_source).pack(side="left")
 
-        self.watch_button = tk.Button(self, text="Start Auto-Move", command=self.toggle_watch,
-                                       bg="#1565c0", fg="white")
+        self.watch_button = tk.Button(
+            self,
+            text="Start Auto-Move",
+            command=self.toggle_watch,
+            bg="#1565c0",
+            fg="white",
+        )
         self.watch_button.pack(pady=8)
 
         self.watch_status = tk.Label(self, text="Not watching.", fg="gray")
@@ -142,13 +199,21 @@ class App(tk.Tk):
         self.log_box = tk.Listbox(self, width=70, height=6)
         self.log_box.pack(pady=(2, 15))
 
-        tk.Label(self, text="Step 3: Paste diagram names, one per line, in page order",
-                 font=("Segoe UI", 12, "bold")).pack(pady=(5, 5))
+        tk.Label(
+            self,
+            text="Step 3: Paste diagram names, one per line, in page order",
+            font=("Segoe UI", 12, "bold"),
+        ).pack(pady=(5, 5))
         self.names_box = tk.Text(self, width=64, height=10)
         self.names_box.pack(pady=5)
 
-        tk.Button(self, text="Rename Screenshots", command=self.rename_screenshots,
-                  bg="#2e7d32", fg="white").pack(pady=15)
+        tk.Button(
+            self,
+            text="Rename Screenshots",
+            command=self.rename_screenshots,
+            bg="#2e7d32",
+            fg="white",
+        ).pack(pady=15)
 
     def _on_subject_change(self, value):
         if value == "Custom...":
@@ -181,7 +246,7 @@ class App(tk.Tk):
     def browse_source(self):
         folder = filedialog.askdirectory(
             title="Select the folder your screen capture tool saves to",
-            initialdir=self.source_entry.get() or str(Path.home())
+            initialdir=self.source_entry.get() or str(Path.home()),
         )
         if folder:
             self.source_entry.delete(0, tk.END)
@@ -190,16 +255,22 @@ class App(tk.Tk):
     def toggle_watch(self):
         if not self.watching:
             if not self.current_folder:
-                messagebox.showwarning("No session folder", "Create a session folder first (Step 1).")
+                messagebox.showwarning(
+                    "No session folder", "Create a session folder first (Step 1)."
+                )
                 return
             source = Path(self.source_entry.get())
             if not source.exists():
-                messagebox.showwarning("Folder not found", f"Source folder doesn't exist:\n{source}")
+                messagebox.showwarning(
+                    "Folder not found", f"Source folder doesn't exist:\n{source}"
+                )
                 return
             self.watching = True
             self.pending = {}
             self.watch_button.config(text="Stop Auto-Move", bg="#c62828")
-            self.watch_status.config(text=f"Watching {source}  ->  {self.current_folder.name}", fg="green")
+            self.watch_status.config(
+                text=f"Watching {source}  ->  {self.current_folder.name}", fg="green"
+            )
             self.poll_source()
         else:
             self.watching = False
@@ -250,7 +321,9 @@ class App(tk.Tk):
 
         folder = filedialog.askdirectory(
             title="Select the folder containing your screenshots",
-            initialdir=str(self.current_folder) if self.current_folder else str(Path.home())
+            initialdir=str(self.current_folder)
+            if self.current_folder
+            else str(Path.home()),
         )
         if not folder:
             return
@@ -268,7 +341,7 @@ class App(tk.Tk):
             proceed = messagebox.askyesno(
                 "Count mismatch",
                 f"Found {len(images)} images but {len(names)} names.\n"
-                f"I'll rename the first {count} in order. Continue?"
+                f"I'll rename the first {count} in order. Continue?",
             )
             if not proceed:
                 return
@@ -281,12 +354,17 @@ class App(tk.Tk):
             new_path = img.parent / new_name
             counter = 1
             while new_path.exists():
-                new_path = img.parent / f"{new_name.rsplit('.', 1)[0]}_{counter}{img.suffix.lower()}"
+                new_path = (
+                    img.parent
+                    / f"{new_name.rsplit('.', 1)[0]}_{counter}{img.suffix.lower()}"
+                )
                 counter += 1
             img.rename(new_path)
             renamed.append(new_path.name)
 
-        messagebox.showinfo("Done", f"Renamed {count} screenshots:\n\n" + "\n".join(renamed))
+        messagebox.showinfo(
+            "Done", f"Renamed {count} screenshots:\n\n" + "\n".join(renamed)
+        )
 
 
 if __name__ == "__main__":
